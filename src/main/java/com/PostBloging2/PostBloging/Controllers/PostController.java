@@ -47,10 +47,13 @@ public class PostController {
             description = "Прошу заметить что оно работает без Анотации" +
                     "так как передает не Json формат, а текст"
     )
-    @PostMapping
+    @PostMapping("/posts")
     public ResponseEntity<PostEntity> addPost(PostEntity postEntity) {
         try {
-            PostEntity postEntity1 = postEntityImpl.save(postEntity);
+            PostEntity postEntity1 = new PostEntity();
+            postEntity1.setTitle(postEntity.getTitle());
+            postEntity1.setDescriprtion(postEntity.getDescriprtion());
+            PostEntity savedPost = postEntityImpl.save(postEntity1);
             return ResponseEntity.ok(postEntity1);
         } catch (Exception e) {
             logger.error("Ошибка при добавление поста: ", e);
@@ -70,7 +73,7 @@ public class PostController {
             if (postEntity12 != null) {
                 return ResponseEntity.notFound().build();
             }
-            postEntity12.setName(updateEntity.getName());
+            postEntity12.setTitle(updateEntity.getTitle());
             postEntity12.setDescriprtion(updateEntity.getDescriprtion());
             PostEntity saveBook = postEntityImpl.save(updateEntity);
             return ResponseEntity.ok(saveBook);
@@ -103,14 +106,10 @@ public class PostController {
                     "можно выбирать каким образом искать так как у нас required = false"
     )
     @GetMapping("/search")
-    public ResponseEntity<List<PostEntity>> search(@RequestParam(required = false) String title,
-                                                   @RequestParam(required = false) String author) {
+    public ResponseEntity<List<PostEntity>> search(@RequestParam(required = false) String title) {
         List<PostEntity> searchResults = new ArrayList<>();
         if (title != null) {
             searchResults.addAll(postEntityImpl.findByTitle(title));
-        }
-        if (author != null) {
-            searchResults.addAll(postEntityImpl.findByAuthor(author));
         }
 
         if (searchResults.isEmpty()) {

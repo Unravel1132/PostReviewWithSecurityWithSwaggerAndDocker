@@ -21,6 +21,5 @@ public interface PostEntityService {
 
     List<PostEntity> findByTitle(String title);
 
-    List<PostEntity> findByAuthor(String author);
 
 }

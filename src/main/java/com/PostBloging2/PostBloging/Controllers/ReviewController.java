@@ -17,8 +17,6 @@ public class ReviewController {
 
     private final ReviewServiceImpl reviewServiceImpl;
 
-
-
     @Autowired
     public ReviewController(ReviewServiceImpl reviewServiceImpl) {
         this.reviewServiceImpl = reviewServiceImpl;

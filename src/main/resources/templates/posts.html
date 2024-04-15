@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Пост</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+
+        .review {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button[type="button"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button[type="button"]:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            margin-bottom: 5px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 id="postTitle"></h1>
+    <p id="postContent"></p>
+
+    <h2>Оставить отзыв</h2>
+    <form id="reviewForm">
+        <label>Отзыв:</label><br>
+        <textarea id="reviewContent" name="reviewContent"></textarea><br>
+        <input type="hidden" id="postId" name="postId">
+        <button type="button" id="createReviewBtn">Оставить отзыв</button>
+    </form>
+
+    <h1>Отзывы</h1>
+    <div id="reviews"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var postId = getPostIdFromUrl();
+        loadPost(postId);
+
+        function getPostIdFromUrl() {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        function loadPost(postId) {
+            $.get("/api/v1/posts/" + postId, function (post) {
+                $("#postTitle").text(post.title);
+                $("#postContent").text(post.content);
+                loadReviews(postId);
+            });
+        }
+
+        function loadReviews(postId) {
+            $.get("/api/v1/posts/" + postId + "/reviews", function (reviews) {
+                var reviewsHtml = "";
+                reviews.forEach(function (review) {
+                    reviewsHtml += "<div class='review'><p>" + review.content + "</p></div>";
+                });
+                $("#reviews").html(reviewsHtml);
+            });
+        }
+
+        $("#createReviewBtn").click(function () {
+            var review = {
+                postId: postId,
+                content: $("#reviewContent").val()
+            };
+            $.post("/api/v1/posts/" + postId + "/reviews", review, function (data) {
+                loadReviews(postId);
+                $("#reviewContent").val("");
+            });
+        });
+    });
+
+</script>
+</body>
+</html>

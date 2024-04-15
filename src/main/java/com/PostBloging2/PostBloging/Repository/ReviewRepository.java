@@ -9,5 +9,4 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<ReviewEntity, Long> {
 
-    List<PostEntity> searchBy(String title, Double priceMin);
 }

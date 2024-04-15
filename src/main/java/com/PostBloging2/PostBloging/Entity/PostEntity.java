@@ -1,6 +1,7 @@
 package com.PostBloging2.PostBloging.Entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,10 @@ public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String name;
-    @Column(name = "descriprtion", length = 500)
+    @Column(name = "title")
+    private String title;
+    @Column(name = "descriprtion")
     private String descriprtion;
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-   private Set<ReviewEntity> reviewEntity;
+    @OneToMany(mappedBy = "postEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReviewEntity> reviewEntity;
 }

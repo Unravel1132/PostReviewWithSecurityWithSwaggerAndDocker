@@ -3,6 +3,7 @@ package com.PostBloging2.PostBloging.Controllers;
 
 import com.PostBloging2.PostBloging.Entity.PostEntity;
 import com.PostBloging2.PostBloging.Service.PostEntityImpl;
+import com.PostBloging2.PostBloging.Service.PostEntityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -17,14 +18,9 @@ import java.util.List;
 @Controller
 public class HomeController {
 
-    @Autowired
-    private PostEntityImpl postEntityImpl;
-
     @Operation(summary = "открывает главную сттраницу сайта")
-    @GetMapping("/home")
-    public String homePage(Model model) {
-        List<PostEntity> posts = postEntityImpl.findAll();
-        model.addAttribute("posts", posts);
+    @GetMapping("/")
+    public String homePage() {
         return "indexHomePage";
 
     }
