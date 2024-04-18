@@ -18,5 +18,4 @@ public class ReqRes {
     private String email;
     private String roles;
     private String password;
-
 }
