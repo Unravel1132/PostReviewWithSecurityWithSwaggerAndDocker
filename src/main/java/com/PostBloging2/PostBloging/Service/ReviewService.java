@@ -4,7 +4,6 @@ import com.PostBloging2.PostBloging.Entity.ReviewEntity;
 
 public interface ReviewService {
 
-    ReviewEntity createReview(ReviewEntity review);
 
     ReviewEntity updateReview(Long id, String updatedText);
 

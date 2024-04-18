@@ -19,10 +19,13 @@ public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "title")
     private String title;
-    @Column(name = "descriprtion")
-    private String descriprtion;
+
+    @Column(name = "description")
+    private String description;
+
     @OneToMany(mappedBy = "postEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ReviewEntity> reviewEntity;
 }

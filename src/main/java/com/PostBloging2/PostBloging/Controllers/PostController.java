@@ -1,17 +1,18 @@
 package com.PostBloging2.PostBloging.Controllers;
 
+import com.PostBloging2.PostBloging.DTO.PostDTO;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
-import com.PostBloging2.PostBloging.Entity.PostEntity;
-import com.PostBloging2.PostBloging.Service.PostEntityImpl;
+import com.PostBloging2.PostBloging.Service.PostServiceImpl.PostServiceImpl;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Tag(name = "Основные методы пост контролерра")
@@ -19,25 +20,41 @@ import java.util.List;
 @RequestMapping("/api/v1")
 public class PostController {
     private static final Logger logger = LoggerFactory.getLogger(PostController.class);
-    private final PostEntityImpl postEntityImpl;
+    private final PostServiceImpl postServiceImpl;
 
     @Autowired
-    public PostController(PostEntityImpl postEntity) {
-        this.postEntityImpl = postEntity;
+    public PostController(PostServiceImpl postEntity) {
+        this.postServiceImpl = postEntity;
     }
 
 
     @Operation(
             summary = "Вызывает получение всех постов"
     )
-    @GetMapping
-    public ResponseEntity<List<PostEntity>> finaAllBooks() {
-        List<PostEntity> books = postEntityImpl.findAll();
+    @GetMapping("/all")
+    public ResponseEntity<List<PostDTO>> finaAllBooks() {
         try {
-            return ResponseEntity.ok(books);
+            return ResponseEntity.ok(postServiceImpl.findAll());
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("Ошибка получения всхе книг: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/all/{id}")
+    public ResponseEntity<PostDTO> findById(@PathVariable Long id) {
+        try {
+
+            PostDTO postDTO = postServiceImpl.findById(id);
+            if (postDTO != null) {
+                return ResponseEntity.ok(postDTO);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+
+        } catch (Exception e) {
+            logger.error("Ошибка при поиске: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -48,13 +65,9 @@ public class PostController {
                     "так как передает не Json формат, а текст"
     )
     @PostMapping("/posts")
-    public ResponseEntity<PostEntity> addPost(PostEntity postEntity) {
+    public ResponseEntity<PostDTO> addPost(@RequestBody PostDTO postDTO) {
         try {
-            PostEntity postEntity1 = new PostEntity();
-            postEntity1.setTitle(postEntity.getTitle());
-            postEntity1.setDescriprtion(postEntity.getDescriprtion());
-            PostEntity savedPost = postEntityImpl.save(postEntity1);
-            return ResponseEntity.ok(postEntity1);
+            return ResponseEntity.ok(postServiceImpl.save(postDTO));
         } catch (Exception e) {
             logger.error("Ошибка при добавление поста: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -67,15 +80,15 @@ public class PostController {
                     "так как передает не Json формат, а текст"
     )
     @PutMapping("/post/{id}")
-    public ResponseEntity<PostEntity> putPost(@PathVariable Long id, @RequestBody PostEntity updateEntity) {
+    public ResponseEntity<PostDTO> putPost(@PathVariable Long id, @RequestBody PostDTO postDTO) {
         try {
-            PostEntity postEntity12 = postEntityImpl.findById(id);
-            if (postEntity12 != null) {
+            PostDTO existsDTO = postServiceImpl.findById(id);
+            if (existsDTO != null) {
                 return ResponseEntity.notFound().build();
             }
-            postEntity12.setTitle(updateEntity.getTitle());
-            postEntity12.setDescriprtion(updateEntity.getDescriprtion());
-            PostEntity saveBook = postEntityImpl.save(updateEntity);
+            existsDTO.setTitle(postDTO.getTitle());
+            existsDTO.setDescription(postDTO.getDescription());
+            PostDTO saveBook = postServiceImpl.save(existsDTO);
             return ResponseEntity.ok(saveBook);
         } catch (Exception e) {
             logger.error("Ошибка при измении: ", e);
@@ -91,7 +104,7 @@ public class PostController {
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         try {
 
-            postEntityImpl.deleteById(id);
+            postServiceImpl.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             logger.error("Ошибка при удалении: ", e);
@@ -106,17 +119,20 @@ public class PostController {
                     "можно выбирать каким образом искать так как у нас required = false"
     )
     @GetMapping("/search")
-    public ResponseEntity<List<PostEntity>> search(@RequestParam(required = false) String title) {
-        List<PostEntity> searchResults = new ArrayList<>();
-        if (title != null) {
-            searchResults.addAll(postEntityImpl.findByTitle(title));
+    public ResponseEntity<List<PostDTO>> search(@RequestParam(required = false) String title) {
+
+        if (title == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        List<PostDTO> searchResults = postServiceImpl.findByTitle(title);
+
+        if (!searchResults.isEmpty()) {
+            return ResponseEntity.ok(searchResults);
+
+        } else {
+            return ResponseEntity.ok(Collections.emptyList());
         }
 
-        if (searchResults.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(searchResults);
-        }
     }
 
 }

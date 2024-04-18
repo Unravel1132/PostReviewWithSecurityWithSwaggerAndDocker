@@ -1,12 +1,11 @@
-package com.PostBloging2.PostBloging.Service;
+package com.PostBloging2.PostBloging.Service.ReviewServiceImpl;
 
 import com.PostBloging2.PostBloging.Entity.ReviewEntity;
 import com.PostBloging2.PostBloging.Repository.ReviewRepository;
+import com.PostBloging2.PostBloging.Service.ReviewService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -14,11 +13,14 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    @Override
     @Transactional
-    public ReviewEntity createReview(ReviewEntity review) {
+    public ReviewEntity createReview(Long postId, ReviewEntity review) {
+
         return reviewRepository.save(review);
     }
+
+
+
 
     @Override
     @Transactional

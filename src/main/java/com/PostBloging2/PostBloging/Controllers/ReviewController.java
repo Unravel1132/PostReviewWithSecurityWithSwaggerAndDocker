@@ -2,7 +2,7 @@ package com.PostBloging2.PostBloging.Controllers;
 
 
 import com.PostBloging2.PostBloging.Entity.ReviewEntity;
-import com.PostBloging2.PostBloging.Service.ReviewServiceImpl;
+import com.PostBloging2.PostBloging.Service.ReviewServiceImpl.ReviewServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +24,9 @@ public class ReviewController {
     @Operation(
             summary = "Добавляет отзыв к посту"
     )
-    @PostMapping
-    public ResponseEntity<ReviewEntity> createReview(@RequestBody ReviewEntity review) {
-        ReviewEntity createdReview = reviewServiceImpl.createReview(review);
+    @PostMapping("/addReview/{postId}")
+    public ResponseEntity<ReviewEntity> createReview(@PathVariable Long postId, @RequestBody ReviewEntity review) {
+        ReviewEntity createdReview = reviewServiceImpl.createReview(postId,review);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
     }
 
