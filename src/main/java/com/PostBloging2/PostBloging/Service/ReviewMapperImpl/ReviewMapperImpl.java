@@ -13,7 +13,7 @@ public class ReviewMapperImpl implements ReviewMapper{
     @Override
     public ReviewEntity toEntity(ReviewDTO reviewDTO) {
         ReviewEntity reviewEntity = new ReviewEntity();
-        reviewEntity.setReviewOtziv(reviewEntity.getReviewOtziv());
+        reviewEntity.setReviewOtziv(reviewDTO.getReviewOtziv());
         return reviewEntity;
     }
 
@@ -21,6 +21,6 @@ public class ReviewMapperImpl implements ReviewMapper{
     public ReviewDTO toDTO(ReviewEntity reviewEntity) {
         ReviewDTO reviewDTO = new ReviewDTO();
         reviewDTO.setReviewOtziv(reviewEntity.getReviewOtziv());
-        return reviewDTO;
+         return reviewDTO;
     }
 }

@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class ReviewDTO {
+    private Long postId;
     private String reviewOtziv;
 }

@@ -17,7 +17,7 @@ public class ReviewEntity {
     @Column(name = "review_otziv", length = 500)
     private String reviewOtziv;
     @ManyToOne
-    @JoinColumn(name ="post_id" )
+    @JoinColumn(name ="post_id")
     private PostEntity postEntity;
 
 }

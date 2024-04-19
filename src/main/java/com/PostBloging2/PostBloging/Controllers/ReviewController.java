@@ -14,20 +14,32 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Основные методы отзыв контролерра")
 @RestController
 @RequestMapping("/api/v1/reviews")
 public class ReviewController {
 
     private final ReviewServiceImpl reviewServiceImpl;
-
     private static final Logger logger = LoggerFactory.getLogger(ReviewController.class);
-
     @Autowired
     public ReviewController(ReviewServiceImpl reviewServiceImpl) {
         this.reviewServiceImpl = reviewServiceImpl;
     }
 
+    @GetMapping("/reviews/all")
+    public ResponseEntity<List<ReviewDTO>> responseDTO() {
+        try {
+            List<ReviewDTO> reviewDTOS = reviewServiceImpl.finaAllReview();
+            if (reviewDTOS != null) {
+                return ResponseEntity.ok(reviewDTOS);
+            } else return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            logger.error("Что-то не работает!!!! ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
     @Operation(
             summary = "Добавляет отзыв к посту"
     )
@@ -37,18 +49,18 @@ public class ReviewController {
             if (postId != null) {
                 ReviewDTO reviewDTO1 = reviewServiceImpl.createReview(postId, reviewDTO);
                 if (reviewDTO1 != null) {
-                    return ResponseEntity.ok(reviewDTO);
+                    return ResponseEntity.ok(reviewDTO1);
                 } else {
                     return ResponseEntity.notFound().build();
                 }
             } else return ResponseEntity.badRequest().build();
+
         } catch (Exception e) {
             logger.error("Ошибка при добавлении отзыва: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
         }
-
     }
+
     @Operation(
             summary = "Изменяет отзыв",
             description = "Изменят текст"
