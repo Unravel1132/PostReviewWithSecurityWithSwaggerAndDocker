@@ -38,8 +38,6 @@ public class PostServiceImpl implements PostService {
 
     }
 
-
-
     @Override
     public PostDTO save(PostDTO postDTO) {
         PostEntity postEntity = postMapper.toEntity(postDTO);

@@ -83,7 +83,7 @@ public class PostController {
     public ResponseEntity<PostDTO> putPost(@PathVariable Long id, @RequestBody PostDTO postDTO) {
         try {
             PostDTO existsDTO = postServiceImpl.findById(id);
-            if (existsDTO != null) {
+            if (existsDTO == null) {
                 return ResponseEntity.notFound().build();
             }
             existsDTO.setTitle(postDTO.getTitle());
@@ -103,7 +103,6 @@ public class PostController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         try {
-
             postServiceImpl.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
@@ -120,15 +119,12 @@ public class PostController {
     )
     @GetMapping("/search")
     public ResponseEntity<List<PostDTO>> search(@RequestParam(required = false) String title) {
-
         if (title == null) {
             return ResponseEntity.badRequest().build();
         }
         List<PostDTO> searchResults = postServiceImpl.findByTitle(title);
-
         if (!searchResults.isEmpty()) {
             return ResponseEntity.ok(searchResults);
-
         } else {
             return ResponseEntity.ok(Collections.emptyList());
         }
