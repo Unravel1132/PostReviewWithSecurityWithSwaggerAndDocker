@@ -7,6 +7,8 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -17,7 +19,6 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers("/auth").permitAll()
-                                .requestMatchers("/api/all").hasRole("ADMIN")
                                 .requestMatchers("/api/v1/posts/**").hasRole("ADMIN")
                                 .requestMatchers("/api/v1/reviews/**").hasRole("ADMIN")
                                 .requestMatchers("/addReview/{postId}").hasRole("USER")
@@ -27,15 +28,20 @@ public class SecurityConfig {
                 ).oauth2ResourceServer(
                         resourceServer -> resourceServer.jwt(
                                 jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(
-                                       keycloakAuthConverter()
+                                        keycloakAuthConverter()
                                 )
                         )
                 )
                 .build();
+
     }
 
-    private Converter<org.springframework.security.oauth2.jwt.Jwt, ? extends AbstractAuthenticationToken> keycloakAuthConverter() {
-        return new JwtGrantedAuthoritiesConverter();
+    private Converter<Jwt,? extends AbstractAuthenticationToken> keycloakAuthConverter() {
+        var converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(
+                new AuthoritiesConverter()
+        );
+        return converter;
     }
 
 
