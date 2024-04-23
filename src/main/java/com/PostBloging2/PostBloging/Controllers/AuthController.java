@@ -18,7 +18,6 @@ public class AuthController {
     @Value("${clint_id")
     private String clientId;
 
-
     @Value("${resource-url")
     private String resourceUrl;
 
@@ -26,7 +25,7 @@ public class AuthController {
     private String grantType;
 
     @PostMapping("/auth")
-    public String auth(@RequestBody AuthDTO authDTO){
+    public String auth(@RequestBody AuthDTO authDTO) {
 
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -45,7 +44,7 @@ public class AuthController {
                 requestEnttiy,
                 String.class
         );
-        if(response.getStatusCodeValue() == 200){
+        if (response.getStatusCodeValue() == 200) {
             return response.getBody();
         }
         return null;
