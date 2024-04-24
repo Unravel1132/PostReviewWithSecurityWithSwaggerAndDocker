@@ -15,12 +15,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Transactional
     public ReviewEntity createReview(Long postId, ReviewEntity review) {
-
         return reviewRepository.save(review);
     }
-
-
-
 
     @Override
     @Transactional

@@ -9,11 +9,10 @@ import org.springframework.stereotype.Service;
 public class PostMapperImpl implements PostMapper {
     @Override
     public PostEntity toEntity(PostDTO postDTO) {
-
         PostEntity postEntity = new PostEntity();
         postEntity.setTitle(postDTO.getTitle());
         postEntity.setDescription(postDTO.getDescription());
-        return postEntity;
+         return postEntity;
     }
 
     @Override

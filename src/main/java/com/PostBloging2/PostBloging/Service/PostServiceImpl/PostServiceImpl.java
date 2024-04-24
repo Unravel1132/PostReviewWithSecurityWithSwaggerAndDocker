@@ -33,12 +33,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO findById(Long id) {
-       PostEntity postEntity=  postRepository.findById(id).orElse(null);
+       PostEntity postEntity = postRepository.findById(id).orElse(null);
         return postMapper.toDTO(postEntity);
 
     }
-
-
 
     @Override
     public PostDTO save(PostDTO postDTO) {

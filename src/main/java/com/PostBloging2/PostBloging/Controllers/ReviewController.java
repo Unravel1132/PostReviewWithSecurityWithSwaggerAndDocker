@@ -24,6 +24,7 @@ public class ReviewController {
     @Operation(
             summary = "Добавляет отзыв к посту"
     )
+
     @PostMapping("/addReview/{postId}")
     public ResponseEntity<ReviewEntity> createReview(@PathVariable Long postId, @RequestBody ReviewEntity review) {
         ReviewEntity createdReview = reviewServiceImpl.createReview(postId,review);

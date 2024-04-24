@@ -103,7 +103,6 @@ public class PostController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         try {
-
             postServiceImpl.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
