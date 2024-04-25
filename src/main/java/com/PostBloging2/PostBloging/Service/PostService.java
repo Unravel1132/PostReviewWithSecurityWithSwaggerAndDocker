@@ -13,7 +13,7 @@ public interface PostService {
 
     PostDTO findById(Long id);
 
-
+    PostDTO update(PostDTO postDTO);
     PostDTO save(PostDTO postDTO);
     void deleteById(Long id);
 

@@ -79,6 +79,7 @@ public class PostController {
             description = "Прошу заметить что оно работает без Анотации" +
                     "так как передает не Json формат, а текст"
     )
+
     @PutMapping("/post/{id}")
     public ResponseEntity<PostDTO> putPost(@PathVariable Long id, @RequestBody PostDTO postDTO) {
         try {
@@ -86,16 +87,23 @@ public class PostController {
             if (existsDTO == null) {
                 return ResponseEntity.notFound().build();
             }
+
+            existsDTO.setId(id);
             existsDTO.setTitle(postDTO.getTitle());
             existsDTO.setDescription(postDTO.getDescription());
-            PostDTO saveBook = postServiceImpl.save(existsDTO);
-            return ResponseEntity.ok(saveBook);
+
+            PostDTO updatedPost = postServiceImpl.update(existsDTO);
+            if (updatedPost != null) {
+                return ResponseEntity.ok(updatedPost);
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
         } catch (Exception e) {
-            logger.error("Ошибка при измении: ", e);
+            logger.error("Ошибка при изменении: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
     }
+
 
     @Operation(
             summary = "Удаляет пост"
