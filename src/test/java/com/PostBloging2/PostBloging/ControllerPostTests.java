@@ -40,18 +40,18 @@ public class ControllerPostTests {
     }
 
     @Test
-    public void findAllPosts(){
+    public void findAllPosts() {
         //when
         when(postService.findAll()).thenReturn(mockPostList);
         ResponseEntity<List<PostDTO>> listResponseEntity = postController.finaAllBooks();
 
         //then
-         assertEquals(listResponseEntity.getStatusCodeValue(), 200);
-         assertEquals(listResponseEntity.getBody(), mockPostList);
+        assertEquals(listResponseEntity.getStatusCodeValue(), 200);
+        assertEquals(listResponseEntity.getBody(), mockPostList);
     }
 
     @Test
-    public void findById_shouldReturnPostById(){
+    public void findById_shouldReturnPostById() {
         //given
         Long id = 1L;
         PostDTO mockPost = new PostDTO("Georgis", "Stal X-Men");
@@ -78,45 +78,54 @@ public class ControllerPostTests {
     }
 
     @Test
-    public void Post_post(){
+    public void addPost_ReturnOk() {
         //given
-        PostDTO postDTO = new PostDTO("Alba", "Georgis");
-        //when
-        when(postService.save(postDTO)).thenReturn(mockPostList.get(0));
-        ResponseEntity<PostDTO> response = postController.addPost(postDTO);
-        //then
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(postDTO, response.getBody());
+        PostDTO postDTO = new PostDTO();
+        PostDTO savedDTO = new PostDTO("Alba", "Georgis");
 
+        //when
+        when(postService.save(postDTO)).thenReturn(savedDTO);
+
+        ResponseEntity<PostDTO> response = postController.addPost(postDTO);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(savedDTO, response.getBody());
     }
 
     @Test
-    public void Post_post_null(){
+    public void addPost_ExceptionThrown() {
         //given
-        PostDTO postDTO = new PostDTO("Alba", "Georgis");
+        PostDTO postDTO = new PostDTO();
+
         //when
-        when(postService.save(postDTO)).thenReturn(mockPostList.get(0));
+        when(postService.save(postDTO)).thenThrow(new RuntimeException("Error"));
         ResponseEntity<PostDTO> response = postController.addPost(postDTO);
         //then
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertNull(response.getBody());
 
     }
 
     @Test
-    public void putPostTest() {
+    void putPostTest() {
         // given
         Long id = 1L;
-        String updateTitle = "Nikos";
-        String updateDescription = "Wolf";
+        PostDTO existed = new PostDTO(id, "Alba", "Georgis");
+        PostDTO updateDescription = new PostDTO(id, "Nikos", "Dima");
+        // When
+        when(postService.findById(id)).thenReturn(existed);
+        when(postService.update(existed)).thenReturn(updateDescription);
+        ResponseEntity<PostDTO> response = postController.putPost(id, updateDescription);
 
+        // Then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updateDescription, response.getBody());
 
-
-
+        verify(postService, times(1)).findById(id);
+        verify(postService, times(1)).update(existed);
     }
 
     @Test
-    public void deletePost(){
+    public void deletePost() {
         //given
         Long id = 1L;
         //when
