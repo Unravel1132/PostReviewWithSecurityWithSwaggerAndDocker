@@ -148,4 +148,5 @@ public class ControllerPostTests {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(postService, times(1)).deleteById(id);
     }
+
 }
