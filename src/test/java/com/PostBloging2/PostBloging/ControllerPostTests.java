@@ -125,6 +125,20 @@ public class ControllerPostTests {
     }
 
     @Test
+    void  putPost_ExceptionThrown() {
+        Long id = 1L;
+        PostDTO existed = new PostDTO(id, "Alba", "Dima");
+        when(postService.findById(id)).thenThrow(new RuntimeException("Error"));
+
+        ResponseEntity<PostDTO> response = postController.putPost(id, existed);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNull(response.getBody());
+        verify(postService, times(1)).findById(id);
+        verify(postService, never()).update(any());
+    }
+
+    @Test
     public void deletePost() {
         //given
         Long id = 1L;
