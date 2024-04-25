@@ -83,7 +83,7 @@ public class PostController {
     public ResponseEntity<PostDTO> putPost(@PathVariable Long id, @RequestBody PostDTO postDTO) {
         try {
             PostDTO existsDTO = postServiceImpl.findById(id);
-            if (existsDTO != null) {
+            if (existsDTO == null) {
                 return ResponseEntity.notFound().build();
             }
             existsDTO.setTitle(postDTO.getTitle());

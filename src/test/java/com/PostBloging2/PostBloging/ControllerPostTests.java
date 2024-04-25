@@ -17,8 +17,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -104,21 +103,17 @@ public class ControllerPostTests {
 
     }
 
-//    @Test
-//    public void putPostTest() {
-//        // given
-//        Long existingId = 1L;
-//        String existingTitle = "existingTitle";
-//        String updatedTitle = "updatedTitle";
-//        String updatedDescription = "updatedDescription";
-//        PostDTO existingPostDTO = new PostDTO(existingTitle, "existingDescription");
-//
-//        PostDTO updatedPostDTO = new PostDTO(updatedTitle, updatedDescription);
-//
-//        when(postService.findByTitle(existingTitle)).thenReturn((List<PostDTO>) existingPostDTO);
-//
-//
-//    }
+    @Test
+    public void putPostTest() {
+        // given
+        Long id = 1L;
+        String updateTitle = "Nikos";
+        String updateDescription = "Wolf";
+
+
+
+
+    }
 
     @Test
     public void deletePost(){

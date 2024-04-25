@@ -9,11 +9,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostDTO {
-
+    
+    @JsonIgnore
+    private Long id;
     private String title;
     private String description;
 
 
+    public PostDTO(String alba, String georgis) {
+    }
 }
 
 
