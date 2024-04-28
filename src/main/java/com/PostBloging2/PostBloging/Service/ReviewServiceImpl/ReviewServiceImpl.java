@@ -1,7 +1,10 @@
 package com.PostBloging2.PostBloging.Service.ReviewServiceImpl;
 
+import com.PostBloging2.PostBloging.DTO.ReviewDTO;
 import com.PostBloging2.PostBloging.Entity.ReviewEntity;
 import com.PostBloging2.PostBloging.Repository.ReviewRepository;
+import com.PostBloging2.PostBloging.Service.DTO_Mappers.ReviewMapperImpl;
+import com.PostBloging2.PostBloging.Service.ReviewMapper;
 import com.PostBloging2.PostBloging.Service.ReviewService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +15,26 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Autowired
     private ReviewRepository reviewRepository;
+    @Autowired
+    private ReviewMapper reviewMapper;
 
+
+    @Override
     @Transactional
-    public ReviewEntity createReview(Long postId, ReviewEntity review) {
-        return reviewRepository.save(review);
+    public ReviewDTO create(Long postId, ReviewDTO review) {
+        ReviewEntity reviewEntity = reviewMapper.toReviewMapper(review);
+        ReviewEntity savedReview = reviewRepository.save(reviewEntity);
+        return reviewMapper.toDTOReviewMapper(savedReview);
     }
 
     @Override
     @Transactional
-    public ReviewEntity updateReview(Long id, String updatedText) {
+    public ReviewDTO updateReview(Long id, String updatedText) {
         ReviewEntity existingReview = reviewRepository.findById(id).orElse(null);
         if (existingReview != null) {
             existingReview.setReviewOtziv(updatedText);
-            return reviewRepository.save(existingReview);
+            reviewRepository.save(existingReview);
+            return reviewMapper.toDTOReviewMapper(existingReview);
         }
         return null;
     }
@@ -36,8 +46,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewEntity getReviewById(Long id) {
-        return reviewRepository.findById(id).orElse(null);
+    public ReviewDTO getReviewById(Long id) {
+        if(reviewRepository.existsById(id)) {
+            return reviewMapper.toDTOReviewMapper(reviewRepository.findById(id).orElse(null));
+        }
+        return null;
     }
 
 

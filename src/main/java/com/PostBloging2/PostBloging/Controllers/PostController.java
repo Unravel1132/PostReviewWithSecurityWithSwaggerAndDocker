@@ -76,10 +76,9 @@ public class PostController {
 
     @Operation(
             summary = "Изменяет пост по желанию",
-            description = "Прошу заметить что оно работает без Анотации" +
-                    "так как передает не Json формат, а текст"
+            description = "Передает PostDTO в тело запроса " +
+                    "и сохраняет пост в базе данных"
     )
-
     @PutMapping("/post/{id}")
     public ResponseEntity<PostDTO> putPost(@PathVariable Long id, @RequestBody PostDTO postDTO) {
         try {
@@ -87,11 +86,9 @@ public class PostController {
             if (existsDTO == null) {
                 return ResponseEntity.notFound().build();
             }
-
             existsDTO.setId(id);
             existsDTO.setTitle(postDTO.getTitle());
             existsDTO.setDescription(postDTO.getDescription());
-
             PostDTO updatedPost = postServiceImpl.update(existsDTO);
             if (updatedPost != null) {
                 return ResponseEntity.ok(updatedPost);

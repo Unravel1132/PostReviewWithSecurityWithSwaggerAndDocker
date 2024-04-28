@@ -1,4 +1,4 @@
-package com.PostBloging2.PostBloging.Service.PostMapperImpl;
+package com.PostBloging2.PostBloging.Service.DTO_Mappers;
 
 import com.PostBloging2.PostBloging.DTO.PostDTO;
 import com.PostBloging2.PostBloging.Entity.PostEntity;

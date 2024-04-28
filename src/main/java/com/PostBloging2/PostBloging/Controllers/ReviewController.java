@@ -1,10 +1,16 @@
 package com.PostBloging2.PostBloging.Controllers;
 
 
+import com.PostBloging2.PostBloging.DTO.ReviewDTO;
+import com.PostBloging2.PostBloging.Entity.PostEntity;
 import com.PostBloging2.PostBloging.Entity.ReviewEntity;
+import com.PostBloging2.PostBloging.Service.DTO_Mappers.ReviewMapperImpl;
 import com.PostBloging2.PostBloging.Service.ReviewServiceImpl.ReviewServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,18 +22,33 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
 
     private final ReviewServiceImpl reviewServiceImpl;
+    private final ReviewMapperImpl reviewMapperImpl;
+    private static final Logger logger = LoggerFactory.getLogger(PostController.class);
 
     @Autowired
-    public ReviewController(ReviewServiceImpl reviewServiceImpl) {
+    public ReviewController(ReviewServiceImpl reviewServiceImpl, ReviewMapperImpl reviewMapperImpl) {
+
         this.reviewServiceImpl = reviewServiceImpl;
+        this.reviewMapperImpl = reviewMapperImpl;
     }
     @Operation(
             summary = "Добавляет отзыв к посту"
     )
     @PostMapping("/addReview/{postId}")
-    public ResponseEntity<ReviewEntity> createReview(@PathVariable Long postId, @RequestBody ReviewEntity review) {
-        ReviewEntity createdReview = reviewServiceImpl.createReview(postId,review);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdReview);
+    public ResponseEntity<ReviewDTO> createReview(@PathVariable Long postId, @RequestBody ReviewDTO review) {
+
+        try{
+            if(postId == null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ReviewDTO());
+            }
+            return ResponseEntity.ok(reviewServiceImpl.create(postId, review));
+        }catch (Exception e){
+            logger.error("Ошибка добваления отзыва: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ReviewDTO());
+
+        }
+
+
     }
 
     @Operation(
@@ -35,8 +56,9 @@ public class ReviewController {
             description = "Изменят текст"
     )
     @PutMapping("/{id}")
-    public ResponseEntity<ReviewEntity> updateReview(@PathVariable Long id, @RequestBody String updatedText) {
-        ReviewEntity updatedReview = reviewServiceImpl.updateReview(id, updatedText);
+    public ResponseEntity<ReviewDTO> updateReview(@PathVariable Long id, @RequestBody String updatedText) {
+        ReviewDTO updatedReview = reviewServiceImpl.updateReview(id, updatedText);
+
         if (updatedReview != null) {
             return ResponseEntity.ok(updatedReview);
         } else {
@@ -55,8 +77,8 @@ public class ReviewController {
             summary = "Поиск отзыва чтобы посмотреть на него"
     )
     @GetMapping("/{id}")
-    public ResponseEntity<ReviewEntity> getReviewById(@PathVariable Long id) {
-        ReviewEntity review = reviewServiceImpl.getReviewById(id);
+    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id) {
+        ReviewDTO review = reviewServiceImpl.getReviewById(id);
         if (review != null) {
             return ResponseEntity.ok(review);
         } else {

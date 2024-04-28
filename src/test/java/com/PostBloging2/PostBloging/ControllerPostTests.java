@@ -33,14 +33,14 @@ public class ControllerPostTests {
     private List<PostDTO> mockPostList;
 
     @BeforeEach
-    public void setUp() {
+     void setUp() {
         MockitoAnnotations.initMocks(this);
         mockPostList = new ArrayList<>();
         mockPostList.add(new PostDTO("Albert", "Георгис"));
     }
 
     @Test
-    public void findAllPosts() {
+     void findAllPosts() {
         //when
         when(postService.findAll()).thenReturn(mockPostList);
         ResponseEntity<List<PostDTO>> listResponseEntity = postController.finaAllBooks();
@@ -51,7 +51,7 @@ public class ControllerPostTests {
     }
 
     @Test
-    public void findById_shouldReturnPostById() {
+     void findById_shouldReturnPostById() {
         //given
         Long id = 1L;
         PostDTO mockPost = new PostDTO("Georgis", "Stal X-Men");
@@ -66,7 +66,7 @@ public class ControllerPostTests {
     }
 
     @Test
-    public void findById_shouldReturnNotFoundWhenPostNotFound() {
+     void findById_shouldReturnNotFoundWhenPostNotFound() {
         //given
         Long id = 10L;
         //when
@@ -78,7 +78,7 @@ public class ControllerPostTests {
     }
 
     @Test
-    public void addPost_ReturnOk() {
+     void addPost_ReturnOk() {
         //given
         PostDTO postDTO = new PostDTO();
         PostDTO savedDTO = new PostDTO("Alba", "Georgis");
@@ -92,7 +92,7 @@ public class ControllerPostTests {
     }
 
     @Test
-    public void addPost_ExceptionThrown() {
+     void addPost_ExceptionThrown() {
         //given
         PostDTO postDTO = new PostDTO();
 
@@ -139,7 +139,7 @@ public class ControllerPostTests {
     }
 
     @Test
-    public void deletePost() {
+     void deletePost() {
         //given
         Long id = 1L;
         //when

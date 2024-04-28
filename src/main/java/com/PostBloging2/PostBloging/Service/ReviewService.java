@@ -1,14 +1,15 @@
 package com.PostBloging2.PostBloging.Service;
 
+import com.PostBloging2.PostBloging.DTO.ReviewDTO;
 import com.PostBloging2.PostBloging.Entity.ReviewEntity;
 
 public interface ReviewService {
 
-
-    ReviewEntity updateReview(Long id, String updatedText);
+    ReviewDTO create(Long postId, ReviewDTO reviewDTO);
+    ReviewDTO updateReview(Long id, String updatedText);
 
     void deleteReview(Long id);
 
-    ReviewEntity getReviewById(Long id);
+    ReviewDTO getReviewById(Long id);
 
 }
