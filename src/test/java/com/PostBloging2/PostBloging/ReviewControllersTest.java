@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -32,6 +34,30 @@ public class ReviewControllersTest {
 
     @InjectMocks
     private ReviewController reviewController;
+
+    private List<ReviewDTO> mockReviewList;
+    @BeforeEach
+    void setUp(){
+        MockitoAnnotations.initMocks(this);
+        mockReviewList = new ArrayList<>();
+        mockReviewList.add(new ReviewDTO("Новый отзыв"));
+        when(reviewService.getAllReviews()).thenReturn(Collections.emptyList());
+
+    }
+
+    @Test
+    void findAllReview(){
+
+        when(reviewService.getAllReviews()).thenReturn(mockReviewList);
+
+        ResponseEntity<List<ReviewDTO>> response = reviewController.getAllReview();
+
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+        assertEquals(response.getBody(), mockReviewList);
+
+
+    }
+
 
     @Test
      void createReview() {
@@ -61,16 +87,19 @@ public class ReviewControllersTest {
     @Test
     void updateReview() {
         Long postId = 1L;
-        ReviewDTO existingReviewDTO = new ReviewDTO(postId, "Отзыв");
-        ReviewDTO updatedReviewDTO = new ReviewDTO(postId, "Новый отзыв");
+        String newText = "This is an updated review text.";
+
+        ReviewDTO existingReviewDTO = new ReviewDTO();
+        ReviewDTO updatedReviewDTO = new ReviewDTO();
 
         when(reviewService.getReviewById(postId)).thenReturn(existingReviewDTO);
-        when(reviewService.updateReview(postId, updatedReviewDTO.getReviewOtziv())).thenReturn(updatedReviewDTO);
+        when(reviewService.updateReview(postId, updatedReviewDTO)).thenReturn(updatedReviewDTO);
 
-        ResponseEntity<ReviewDTO> response = reviewController.updateReview(postId, updatedReviewDTO.getReviewOtziv());
-
-        assertEquals(updatedReviewDTO, response.getBody());
+        ResponseEntity<ReviewDTO> response = reviewController.updateReview(postId, updatedReviewDTO);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedReviewDTO, response.getBody());
+
     }
+
 
 }

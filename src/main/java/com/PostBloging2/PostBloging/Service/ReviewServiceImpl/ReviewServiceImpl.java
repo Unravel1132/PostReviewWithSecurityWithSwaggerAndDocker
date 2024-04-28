@@ -10,6 +10,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
@@ -29,14 +33,24 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public ReviewDTO updateReview(Long id, String updatedText) {
+    public ReviewDTO updateReview(Long id, ReviewDTO updatedText) {
         ReviewEntity existingReview = reviewRepository.findById(id).orElse(null);
         if (existingReview != null) {
-            existingReview.setReviewOtziv(updatedText);
+            existingReview.setReviewOtziv(updatedText.getReviewOtziv());
             reviewRepository.save(existingReview);
             return reviewMapper.toDTOReviewMapper(existingReview);
         }
         return null;
+    }
+
+    @Override
+    public List<ReviewDTO> getAllReviews() {
+        List<ReviewEntity> reviewDTOS = reviewRepository.findAll();
+        return reviewDTOS.stream().map(request -> reviewMapper
+                .toDTOReviewMapper(request))
+                .collect(Collectors.toList());
+
+
     }
 
     @Override

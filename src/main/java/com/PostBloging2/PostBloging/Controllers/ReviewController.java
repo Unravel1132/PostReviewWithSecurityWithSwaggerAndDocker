@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Основные методы отзыв контролерра")
 @RestController
 @RequestMapping("/api/v1/reviews")
@@ -31,6 +33,21 @@ public class ReviewController {
         this.reviewServiceImpl = reviewServiceImpl;
         this.reviewMapperImpl = reviewMapperImpl;
     }
+
+
+    @GetMapping("/all/Review")
+    public ResponseEntity<List<ReviewDTO>> getAllReview() {
+        try{
+            List<ReviewDTO> lis1 = reviewServiceImpl.getAllReviews();
+            return new ResponseEntity<>(lis1, HttpStatus.OK);
+        }catch (Exception e){
+            logger.error("Ошибка", e);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
     @Operation(
             summary = "Добавляет отзыв к посту"
     )
@@ -56,7 +73,7 @@ public class ReviewController {
             description = "Изменят текст"
     )
     @PutMapping("/{id}")
-    public ResponseEntity<ReviewDTO> updateReview(@PathVariable Long id, @RequestBody String updatedText) {
+    public ResponseEntity<ReviewDTO> updateReview(@PathVariable Long id, @RequestBody ReviewDTO updatedText) {
         ReviewDTO updatedReview = reviewServiceImpl.updateReview(id, updatedText);
 
         if (updatedReview != null) {
@@ -65,6 +82,7 @@ public class ReviewController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @Operation(
             summary = "Удаляет отзыв"
     )
