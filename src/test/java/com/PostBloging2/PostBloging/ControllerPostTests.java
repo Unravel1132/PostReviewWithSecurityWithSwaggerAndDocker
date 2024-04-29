@@ -35,8 +35,7 @@ public class ControllerPostTests {
     @BeforeEach
      void setUp() {
         MockitoAnnotations.initMocks(this);
-        mockPostList = new ArrayList<>();
-        mockPostList.add(new PostDTO("Albert", "Георгис"));
+
     }
 
     @Test

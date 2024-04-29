@@ -45,7 +45,6 @@ public class PostController {
     @GetMapping("/all/{id}")
     public ResponseEntity<PostDTO> findById(@PathVariable Long id) {
         try {
-
             PostDTO postDTO = postServiceImpl.findById(id);
             if (postDTO != null) {
                 return ResponseEntity.ok(postDTO);

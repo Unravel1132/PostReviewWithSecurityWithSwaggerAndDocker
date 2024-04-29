@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Основные методы отзыв контролерра")
+@Tag(name = "Основные методы отзыв-контролерра")
 @RestController
 @RequestMapping("/api/v1/reviews")
 public class ReviewController {
@@ -47,6 +47,23 @@ public class ReviewController {
     }
 
 
+    @Operation(
+            summary = "Поиск отзыва чтобы посмотреть на него"
+    )
+    @GetMapping("/all/Review/{postId}")
+    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long postId) {
+        try {
+            ReviewDTO reviewDTO = reviewServiceImpl.getReviewById(postId);
+            if (reviewDTO != null) {
+                return ResponseEntity.ok(reviewDTO);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            logger.error("Error while searching: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @Operation(
             summary = "Добавляет отзыв к посту"
@@ -91,16 +108,5 @@ public class ReviewController {
         reviewServiceImpl.deleteReview(id);
         return ResponseEntity.noContent().build();
     }
-    @Operation(
-            summary = "Поиск отзыва чтобы посмотреть на него"
-    )
-    @GetMapping("/{id}")
-    public ResponseEntity<ReviewDTO> getReviewById(@PathVariable Long id) {
-        ReviewDTO review = reviewServiceImpl.getReviewById(id);
-        if (review != null) {
-            return ResponseEntity.ok(review);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
 }
