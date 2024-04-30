@@ -25,8 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
- public class ReviewControllersTest {
+  public class ReviewControllersTest {
 
     @Mock
     ReviewServiceImpl reviewService;
@@ -61,14 +60,15 @@ import static org.mockito.Mockito.when;
      void getReviewById() {
          Long id = 1L;
 
-         ReviewDTO mockReviewDTO = mockReviewList.get(0);
+         ReviewDTO reviewDTO = new ReviewDTO();
+         reviewDTO.setId(id);
+         when(reviewService.getReviewById(id)).thenReturn(reviewDTO);
 
-         when(reviewService.getReviewById(id)).thenReturn(mockReviewDTO);
 
          ResponseEntity<ReviewDTO> response = reviewController.getReviewById(id);
 
          assertEquals(HttpStatus.OK, response.getStatusCode());
-         assertEquals(mockReviewDTO, response.getBody());
+         assertEquals(reviewDTO, response.getBody());
      }
 
      @Test
