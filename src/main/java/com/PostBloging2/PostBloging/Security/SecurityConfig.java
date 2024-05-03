@@ -18,40 +18,29 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
-        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 
         return http.authorizeRequests(auth -> auth
                 .requestMatchers("/auth").permitAll()
-                .requestMatchers("/api/v1/reviews/addReview/").hasRole("USER")
-                .requestMatchers("/api/v1/reviews/{id}").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/api/v1/reviews/all/Review").hasRole("ADMIN")
-                .requestMatchers("/api/v1/reviews/{id}").hasAnyRole("USER", "ADMIN")
-                .requestMatchers("/api/v1/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/reviews/all/Review").hasRole("admin")
                 .anyRequest().authenticated()
         ).sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-
         ).oauth2ResourceServer(
                 resourse -> resourse.jwt(
                         jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(
-                                keycloackConverter()
+                                keycloakAuthConverter()
                         )
                 )
         ).build();
 
-
-
-
-
-
     }
 
-    private Converter<Jwt,? extends AbstractAuthenticationToken> keycloackConverter() {
-
+    private Converter<Jwt,? extends AbstractAuthenticationToken> keycloakAuthConverter() {
         var converter = new JwtAuthenticationConverter();
-        converter.setJwtGrantedAuthoritiesConverter(new JwtGrantedAuthoritiesConverter());
+        converter.setJwtGrantedAuthoritiesConverter(
+                new AuthoritiesConverter()
+        );
         return converter;
     }
-
 
 }

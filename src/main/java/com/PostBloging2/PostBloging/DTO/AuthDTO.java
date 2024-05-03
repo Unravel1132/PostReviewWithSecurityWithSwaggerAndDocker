@@ -1,5 +1,6 @@
 package com.PostBloging2.PostBloging.DTO;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,4 +11,5 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-public record AuthDTO(String login, String password) {}
+public record AuthDTO(String login, String password) {
+}

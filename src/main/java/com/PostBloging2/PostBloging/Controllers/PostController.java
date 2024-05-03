@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1")
 public class PostController {
+
     private static final Logger logger = LoggerFactory.getLogger(PostController.class);
     private final PostServiceImpl postServiceImpl;
 
@@ -60,8 +61,7 @@ public class PostController {
 
     @Operation(
             summary = "Добавляет новый пост на страницу",
-            description = "Прошу заметить что оно работает без Анотации" +
-                    "так как передает не Json формат, а текст"
+            description = "передает Json"
     )
     @PostMapping("/posts")
     public ResponseEntity<PostDTO> addPost(@RequestBody PostDTO postDTO) {
