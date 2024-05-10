@@ -24,7 +24,6 @@ public class ReviewServiceImpl implements ReviewService {
 
 
     @Override
-    @Transactional
     public ReviewDTO create(Long postId, ReviewDTO review) {
         ReviewEntity reviewEntity = reviewMapper.toReviewMapper(review);
         ReviewEntity savedReview = reviewRepository.save(reviewEntity);
@@ -32,7 +31,6 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    @Transactional
     public ReviewDTO updateReview(Long id, ReviewDTO updatedText) {
         ReviewEntity existingReview = reviewRepository.findById(id).orElse(null);
         if (existingReview != null) {
@@ -54,7 +52,6 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    @Transactional
     public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
     }

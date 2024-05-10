@@ -7,6 +7,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -19,14 +20,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
 
-        return http.authorizeRequests(auth -> auth
-                .requestMatchers("/auth").permitAll()
-                .requestMatchers("/api/v1/reviews/all/Review").hasRole("admin")
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeRequests(auth -> auth
+                .requestMatchers("/api/v1/all").permitAll()
+                .requestMatchers("api/v1/reviews/all/").permitAll()
+                .requestMatchers("api/v1/reviews/addReview/").hasRole("user")
+                .requestMatchers("api/v1/reviews/deleteReview/").hasRole("user")
+                .requestMatchers("api/v1/reviews/**").hasRole("admin")
                 .anyRequest().authenticated()
         ).sessionManagement(
                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         ).oauth2ResourceServer(
-                resourse -> resourse.jwt(
+                resource -> resource.jwt(
                         jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(
                                 keycloakAuthConverter()
                         )

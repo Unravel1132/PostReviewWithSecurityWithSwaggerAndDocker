@@ -16,12 +16,12 @@ public class ReviewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "review_otziv", length = 500)
     private String reviewOtziv;
+
     @ManyToOne
-    @JoinColumn(name ="post_id" )
+    @JoinColumn(name = "post_id")
     private PostEntity postEntity;
-    public ReviewEntity(String reviewOtziv) {
-        this.reviewOtziv = reviewOtziv;
-    }
+
 }

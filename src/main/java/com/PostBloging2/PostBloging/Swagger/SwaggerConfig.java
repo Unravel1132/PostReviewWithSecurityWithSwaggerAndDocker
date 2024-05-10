@@ -13,14 +13,14 @@ import java.util.List;
 
 public class SwaggerConfig {
     @Bean
-    public OpenAPI api(){
-return new OpenAPI()
-        .servers(
-                List.of(
-                        new Server().url("http://localhost:8081")
-                )
-        ).info(
-                new Info().title("Our PostBloging-Review")
-        );
+    public OpenAPI api() {
+        return new OpenAPI()
+                .servers(
+                        List.of(
+                                new Server().url("http://localhost:8081")
+                        )
+                ).info(
+                        new Info().title("Our PostBloging-Review")
+                );
     }
 }

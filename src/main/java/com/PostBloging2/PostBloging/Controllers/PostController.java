@@ -113,13 +113,12 @@ public class PostController {
             logger.error("Ошибка при удалении: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
     }
+
 
     @Operation(
             summary = "Ищет пост в поисковой строке",
-            description = "Ищет по названию или по автору поста," +
-                    "можно выбирать каким образом искать так как у нас required = false"
+            description = "Ищет по названию или по автору поста"
     )
     @GetMapping("/search")
     public ResponseEntity<List<PostDTO>> search(@RequestParam(required = false) String title) {
